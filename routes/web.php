@@ -16,3 +16,7 @@ Route::get('/', function () {
     dd($user->hasRole(['super-admin']));
     return view('welcome');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
