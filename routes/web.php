@@ -10,8 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+//
 Route::get('/', function () {
-    return \App\User::find(6339);
+    $user = \App\User::find(6339);
+    dd($user->hasRole(['super-admin']));
     return view('welcome');
 });
