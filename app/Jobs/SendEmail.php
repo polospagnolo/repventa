@@ -31,7 +31,7 @@ class SendEmail implements ShouldQueue
      */
     public function handle()
     {
-        Mail::to('manuelsantos@spagnolo.com.es')
+            Mail::to('manuelsantos@spagnolo.com.es')
             ->cc('niko@spagnolo.com.es')
             ->send(new ImportFinish());
 

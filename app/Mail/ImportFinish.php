@@ -28,7 +28,8 @@ class ImportFinish extends Mailable
      */
     public function build()
     {
-        return $this->to('test@test.com','Test')
+        return $this->to('joseantoniorojas@spagnolo.com.es','Jose Antonio')
+            //->cc(['m'])
             ->attach(public_path('txt/Traspaso.txt'))
             ->markdown('emails.importfinish');
     }
