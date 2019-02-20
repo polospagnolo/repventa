@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\ArticuloAecoc;
+use App\TraspasoSalidaLinea;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -15,16 +16,18 @@ class CreateTxt implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
     public $sale;
     protected $almacen = false;
+    public $traspaso;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($sale)
+    public function __construct($sale,$traspaso)
     {
         //
         $this->sale = $sale;
+        $this->traspaso = $traspaso;
     }
 
     /**
@@ -64,11 +67,17 @@ class CreateTxt implements ShouldQueue
                     fwrite($file, "{$this->sale->almacen} \r\n");
                     $this->almacen = true;
                 }
+                $line = new TraspasoSalidaLinea;
+                $line->traspaso_id = $this->traspaso->id;
+                $line->articuloaecoc_id = $product->idarticuloaecoc;
+                $line->cantidad = $stockOut;
+                $line->save();
                 fwrite($file, $aecoc->aecoc . "        " . $stockOut . "\r\n");
                 $product->stock .= $stockOut;
+                $product->update();
             }
 
-            //$product->update();
+            //
 
         }
     }

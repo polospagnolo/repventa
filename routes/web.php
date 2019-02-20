@@ -23,18 +23,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@import')->name('home');
 
-Route::get('/import', function () {
-    if(file_exists(public_path('txt/Traspaso.txt')))
-    {
-        unlink(public_path('txt/Traspaso.txt'));
-    }
 
-    \App\SalesReposition::truncate();
-       Excel::queueImport(new SalesImport, 'Libro1.xlsx')
-       ->chain([new App\Jobs\CreateTxts()]);
 
-       return 'Se esta procesando';
-
-});
+//Route::get('/import', 'HomeController@import');
+Route::post('/import', 'HomeController@store')->name('import');

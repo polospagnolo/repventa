@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\TraspasoSalidaCabecera;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,6 +15,7 @@ class CreateTxts implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    protected $traspaso = null;
     /**
      * Create a new job instance.
      *
@@ -31,9 +33,8 @@ class CreateTxts implements ShouldQueue
      */
     public function handle()
     {
-
+        $this->traspaso = $this->createTraspaso();
         return $this->chain($this->generateJobs());
-
 
     }
 
@@ -49,9 +50,18 @@ class CreateTxts implements ShouldQueue
 
         foreach ($sales as $sale)
         {
-            $jobs->push(new CreateTxt($sale));
+            $jobs->push(new CreateTxt($sale,$this->traspaso));
         }
         $jobs->push(new \App\Jobs\SendEmail());
         return $jobs;
+    }
+
+    public function createTraspaso()
+    {
+        $traspaso = New TraspasoSalidaCabecera;
+        $traspaso->descripcion = "Reposición de venta del ".date('d-m-Y');
+        $traspaso->user_id = 6339;
+        $traspaso->save();
+        return $traspaso;
     }
 }
